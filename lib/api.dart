@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:julkort/model.dart';
 import 'package:http/http.dart' as http;
 
-const API_KEY = '2d8b24a5-c30d-4cb6-bc35-e2b1bedfd5b4';
-const API_URL = 'http://10.0.2.2:3000';
+const API_KEY = 'b9948f8b-4782-41bc-ada3-b7790e78efcf';
+const API_URL = 'https://julkort-api-qhvxn.ondigitalocean.app';
 
 class Api {
   static Future<List<ChristmasCard>> addCard(ChristmasCard card) async {
     Map<String, dynamic> json = ChristmasCard.toJson(card);
     var bodyString = jsonEncode(json);
     var response = await http.post(
-      '$API_URL/julkort?key=$API_KEY',
+      Uri.parse('$API_URL/julkort?key=$API_KEY'),
       body: bodyString,
       headers: {'Content-Type': 'application/json'},
     );
@@ -24,7 +24,8 @@ class Api {
   }
 
   static Future deleteCard(String cardId) async {
-    var response = await http.delete('$API_URL/julkort/$cardId?key=$API_KEY&_confirm=true');
+    var response = await http.delete(
+        Uri.parse('$API_URL/julkort/$cardId?key=$API_KEY&_confirm=true'));
     var bodyString = response.body;
     var list = jsonDecode(bodyString);
 
@@ -34,8 +35,9 @@ class Api {
   }
 
   static Future<List<ChristmasCard>> getCards() async {
-    var response = await http.get('$API_URL/julkort?key=$API_KEY');
+    var response = await http.get(Uri.parse('$API_URL/julkort?key=$API_KEY'));
     String bodyString = response.body;
+    print(bodyString);
     var json = jsonDecode(bodyString);
 
     return json.map<ChristmasCard>((data) {
